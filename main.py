@@ -5,15 +5,16 @@ from app.prompts.prompt_builder import PromptBuilder
 from app.agents.sql_agent import SQLAgent
 from app.utils.sql_cleaner import clean_sql
 from app.database.data_profiler import DataProfiler
-
+from app.graph.sql_graph import SQLGraph
 
 llm = LLMClient()
 db = DatabaseManager()
 schema_reader = SchemaReader(db)
 prompt_builder = PromptBuilder()
+sql_graph = SQLGraph(llm, db, schema_reader, prompt_builder)
 data_profiler = DataProfiler(db)
 
-print(data_profiler.get_distinct_values("orders", "category"))
+print(sql_graph.ask("Number of times basket price is larger than 400rs?"))
 
 #agent = SQLAgent(llm , db , schema_reader , prompt_builder)
 #question = "How many order got vegetables in category ?"

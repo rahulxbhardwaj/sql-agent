@@ -11,3 +11,11 @@ class SchemaReader:
         query = f"PRAGMA table_info({table_name});"
         results = self.db.execute_query(query)
         return [row['name'] for row in results]
+    
+    def get_schema(self):
+        schema = {}
+        tables = self.get_tables()
+        for table in tables:
+            schema[table] = self.get_columns(table)
+        print(f"Schema Retured is : {schema}")
+        return schema
