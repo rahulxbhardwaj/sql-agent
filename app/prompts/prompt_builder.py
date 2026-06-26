@@ -3,6 +3,7 @@ class PromptBuilder:
     def build_sql_prompt(
             self,
             question,
+            execution_plan,
             schema
     ):
         prompt = f"""
@@ -19,6 +20,8 @@ class PromptBuilder:
 
                     QUESTION : {question} 
                     SCHEMA : {schema}
+
+                    EXECUTION PLAN : {execution_plan}
                     """
     
         return prompt

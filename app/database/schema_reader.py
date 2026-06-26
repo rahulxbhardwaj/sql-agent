@@ -17,5 +17,4 @@ class SchemaReader:
         tables = self.get_tables()
         for table in tables:
             schema[table] = self.get_columns(table)
-        print(f"Schema Retured is : {schema}")
         return schema
