@@ -1,30 +1,38 @@
+import os
 import pandas as pd
 import sqlite3
 
 from app.config import DATABASE_PATH
 
+DATASET_FOLDER = "sample_dataset"
+
 print("Loading data from CSV files...")
 
-df = pd.read_csv("blinkit_dataset.csv")
-df.columns = [
-    "order_id",
-    "customer_id",
-    "order_datetime",
-    "product_name",
-    "category",
-    "quantity",
-    "price",
-    "city",
-    "delivery_time_mins",
-    "order_status"
-]
-
+# Connect to SQLite
 con = sqlite3.connect(DATABASE_PATH)
 
-df.to_sql(
-    "orders", con, if_exists="replace", index=False
-)
+# Load every CSV in the folder
+for file in os.listdir(DATASET_FOLDER):
+    if file.endswith(".csv"):
+        csv_path = os.path.join(DATASET_FOLDER, file)
+
+        print(f"\nLoading {file}...")
+
+        df = pd.read_csv(csv_path)
+
+        # Table name = file name without .csv
+        table_name = os.path.splitext(file)[0]
+
+        df.to_sql(
+            table_name,
+            con,
+            if_exists="replace",
+            index=False
+        )
+
+        print(f"Created table: {table_name}")
+        print(f"Rows inserted: {len(df)}")
 
 con.close()
-print("Database setup complete. Data has been loaded into the SQLite database.")
-print("Rows inserted:", len(df))
+
+print("\nDatabase setup complete.")

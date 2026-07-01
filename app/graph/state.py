@@ -1,19 +1,29 @@
-from typing import TypedDict
+from typing import TypedDict, List
 
 
-class Plan(TypedDict):
-    execution_plan: str
-    history: str
-    exploration_steps: int
-    confidence: float
+class HistoryItem(TypedDict):
+    thought_process: str
+    exploration_query: str
+    observation: list
+
 
 class SQLAgentState(TypedDict):
-    """State of the SQL Agent."""
-    
     question: str
+
+    history: List[HistoryItem]
+
     sql_query: str
+
     results: list
+
+    final_query: str
+
+    need_exploration: bool
+
+    remaining_attempts: int
+
     error: str
-    retry_count : int
-    context : str
-    plan : Plan
+
+    context: str
+
+    thought_process: str
