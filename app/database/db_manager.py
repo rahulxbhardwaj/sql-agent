@@ -8,7 +8,7 @@ class DatabaseManager:
 
         self.db_path = DATABASE_PATH
 
-        self.connection = sqlite3.connect(self.db_path)
+        self.connection = sqlite3.connect(self.db_path, check_same_thread=False)
 
         self.connection.row_factory = sqlite3.Row
         self.cursor = self.connection.cursor()

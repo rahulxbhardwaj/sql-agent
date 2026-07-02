@@ -29,6 +29,7 @@ sql_graph = SQLGraph(llm, db, schema_reader, prompt_builder, clean_sql,SchemaFor
 data_profiler = DataProfiler(db)
 
 response = sql_graph.ask("What shares does Rahul hold ? ")
+
 renderer.render(response,tracer.get_trace())
 
 db.close()
