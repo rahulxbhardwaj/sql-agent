@@ -1,62 +1,199 @@
 import { TraceStep } from "../src/types/api";
+import {
+  Database,
+  BrainCircuit,
+  Search,
+  PlayCircle,
+  CheckCircle2,
+} from "lucide-react";
 
 interface TimelineProps {
   trace: TraceStep[];
 }
 
-const stageNames: Record<string, string> = {
-  load_context: "📚 Loading Database Context",
-  planner: "🧠 AI Planner Thinking",
-  execute_exploration: "🔍 Exploring Database",
-  execute_final: "⚡ Executing SQL",
+const stageConfig: Record<
+  string,
+  {
+    title: string;
+    icon: React.ReactNode;
+  }
+> = {
+  load_context: {
+    title: "Load Context",
+    icon: <Database size={18} />,
+  },
+
+  planner: {
+    title: "Planner",
+    icon: <BrainCircuit size={18} />,
+  },
+
+  execute_exploration: {
+    title: "Explore",
+    icon: <Search size={18} />,
+  },
+
+  execute_final: {
+    title: "Execute",
+    icon: <PlayCircle size={18} />,
+  },
 };
 
-export default function ExecutionTimeline({ trace }: TimelineProps) {
+export default function ExecutionTimeline({
+  trace,
+}: TimelineProps) {
 
-  if (trace.length === 0) return null;
+  if (!trace.length) return null;
 
   return (
 
-    <div className="rounded-lg bg-gray-900 p-5">
+    <div
+      className="
+      rounded-[28px]
+      border
+      border-white/70
+      bg-white/55
+      backdrop-blur-2xl
+      p-7
+      shadow-lg
+    "
+    >
 
-      <h2 className="text-xl font-bold mb-5">
-        ⚡ Execution Timeline
-      </h2>
+      {/* Header */}
 
-      <div className="space-y-3">
+      <div className="flex items-center gap-3 mb-8">
 
-        {trace.map((step, index) => (
+        <div
+          className="
+          h-10
+          w-10
+          rounded-full
+          bg-violet-100
+          flex
+          items-center
+          justify-center
+          text-violet-600
+        "
+        >
+          <CheckCircle2 size={20} />
+        </div>
 
-          <div
-            key={index}
-            className="rounded-lg border border-gray-700 bg-gray-800 p-4"
-          >
+        <div>
 
-            <div className="flex justify-between">
+          <h2 className="font-semibold text-slate-800 text-lg">
 
-              <div className="font-semibold">
+            Execution Timeline
 
-                {stageNames[step.name] ?? step.name}
+          </h2>
+
+          <p className="text-sm text-slate-500">
+
+            AI execution pipeline
+
+          </p>
+
+        </div>
+
+      </div>
+
+      {/* Timeline */}
+
+      <div className="relative">
+
+        {/* Gradient Line */}
+
+        <div
+          className="
+          absolute
+          left-0
+          right-0
+          top-5
+          h-[3px]
+          rounded-full
+          bg-gradient-to-r
+          from-blue-400
+          via-violet-400
+          to-pink-400
+        "
+        />
+
+        <div className="relative grid grid-cols-4 gap-4">
+
+          {trace.map((step, index) => {
+
+            const config = stageConfig[step.name];
+
+            return (
+
+              <div
+                key={index}
+                className="flex flex-col items-center"
+              >
+
+                {/* Circle */}
+
+                <div
+                  className="
+                  relative
+                  z-10
+                  flex
+                  h-10
+                  w-10
+                  items-center
+                  justify-center
+                  rounded-full
+                  bg-white
+                  border
+                  border-blue-200
+                  shadow-lg
+                  text-blue-600
+                "
+                >
+                  {config?.icon}
+                </div>
+
+                {/* Name */}
+
+                <p className="mt-4 text-sm font-semibold text-slate-700 text-center">
+
+                  {config?.title ?? step.name}
+
+                </p>
+
+                {/* Time */}
+
+                <p className="mt-1 text-xs text-slate-500">
+
+                  {step.duration.toFixed(2)}s
+
+                </p>
+
+                {/* Status */}
+
+                <span
+                  className="
+                  mt-3
+                  rounded-full
+                  bg-green-100
+                  px-3
+                  py-1
+                  text-xs
+                  font-medium
+                  text-green-700
+                "
+                >
+
+                  {step.status}
+
+                </span>
 
               </div>
 
-              <div className="text-green-400">
+            );
 
-                ✔ {step.status}
+          })}
 
-              </div>
-
-            </div>
-
-            <div className="mt-2 text-sm text-gray-400">
-
-              {step.duration.toFixed(2)} sec
-
-            </div>
-
-          </div>
-
-        ))}
+        </div>
 
       </div>
 

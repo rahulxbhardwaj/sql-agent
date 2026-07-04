@@ -2,44 +2,67 @@ interface ResultTableProps {
   data: Record<string, any>[];
 }
 
-export default function ResultTable({ data }: ResultTableProps) {
+export default function ResultTable({
+  data,
+}: ResultTableProps) {
 
-  // No data
-  if (data.length === 0) {
+  if (!data.length) {
     return (
-      <div className="rounded-lg bg-gray-900 p-5">
-        
-
-        <p className="mt-3 text-gray-400">
-          No rows returned.
-        </p>
+      <div
+        className="
+        rounded-[24px]
+        border
+        border-white/70
+        bg-white/70
+        backdrop-blur-xl
+        p-8
+        text-center
+        text-slate-500
+        "
+      >
+        No rows returned.
       </div>
     );
   }
 
-  // Extract column names dynamically
   const columns = Object.keys(data[0]);
 
   return (
-    <div className="rounded-lg bg-gray-900 p-5">
 
-      <h2 className="text-xl font-bold mb-4">
-        📊 Results
-      </h2>
+    <div
+      className="
+      overflow-hidden
+      rounded-[28px]
+      border
+      border-white/70
+      bg-white/70
+      backdrop-blur-2xl
+      shadow-lg
+      "
+    >
 
-      <div className="overflow-x-auto">
+      <div className="overflow-auto">
 
-        <table className="min-w-full border border-gray-700">
+        <table className="min-w-full">
 
           <thead>
 
-            <tr>
+            <tr className="border-b border-slate-200/60 bg-white/60">
 
               {columns.map((column) => (
 
                 <th
                   key={column}
-                  className="border border-gray-700 bg-gray-800 px-4 py-2 text-left"
+                  className="
+                  px-6
+                  py-4
+                  text-left
+                  text-sm
+                  font-semibold
+                  uppercase
+                  tracking-wide
+                  text-slate-600
+                  "
                 >
                   {column}
                 </th>
@@ -54,15 +77,31 @@ export default function ResultTable({ data }: ResultTableProps) {
 
             {data.map((row, index) => (
 
-              <tr key={index}>
+              <tr
+                key={index}
+                className="
+                border-b
+                border-slate-100
+                transition-all
+                duration-200
+                hover:bg-blue-50/50
+                "
+              >
 
                 {columns.map((column) => (
 
                   <td
                     key={column}
-                    className="border border-gray-700 px-4 py-2"
+                    className="
+                    px-6
+                    py-4
+                    text-[15px]
+                    text-slate-700
+                    "
                   >
+
                     {String(row[column])}
+
                   </td>
 
                 ))}
@@ -78,5 +117,7 @@ export default function ResultTable({ data }: ResultTableProps) {
       </div>
 
     </div>
+
   );
+
 }
