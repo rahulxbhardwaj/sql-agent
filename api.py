@@ -1,6 +1,10 @@
-from fastapi import FastAPI
+from fastapi import FastAPI , Request
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
+import json
+
+from fastapi.responses import StreamingResponse
+import asyncio
 
 # ===== Project Imports =====
 from app.llm.llm_client import LLMClient
@@ -17,6 +21,7 @@ from app.tracing.execution_tracer import ExecutionTracer
 # ===========================
 
 app = FastAPI(title="AI Database Operator API")
+clients = []
 
 # Allow Next.js frontend
 app.add_middleware(
@@ -66,6 +71,14 @@ def home():
         "message": "AI Database Operator Backend Running 🚀"
     }
 
+@app.post("/event")
+async def event(request: Request):
+    data = await request.json()
+    print(f"Received Event: {data}")
+    for client in clients:
+        await client.put(data)
+    return {"success" : True}
+
 
 @app.post("/ask")
 def ask_ai(request: QuestionRequest):
@@ -83,3 +96,22 @@ def ask_ai(request: QuestionRequest):
         "error": state["error"],
         "trace": tracer.get_trace()
     }
+
+
+@app.get("/events")
+async def events():
+
+    queue = asyncio.Queue()
+    clients.append(queue)
+
+    async def event_stream():
+        while True:
+            data = await queue.get()
+            yield f"data: {json.dumps(data)}\n\n"
+
+    return StreamingResponse(
+        event_stream(),
+        media_type="text/event-stream"
+    )
+
+

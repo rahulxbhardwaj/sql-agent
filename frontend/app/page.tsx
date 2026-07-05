@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from "react";
+import { useEffect } from "react";
 
 import Header from "../components/header";
 import QueryInput from "../components/QueryInput";
@@ -12,6 +13,26 @@ export default function Home() {
 
   const [query, setQuery] = useState("");
   const [messages, setMessages] = useState<Message[]>([]);
+  const [thinkingText, setThinkingText] = useState("Thinking...");
+
+
+  
+
+  useEffect(() => {
+    const eventSource = new EventSource("http://localhost:8000/events");
+    eventSource.onmessage = (event) => {
+    
+    const data = JSON.parse(event.data);
+    console.log("Received event:", data);
+    setThinkingText(data.message);
+
+
+    };
+
+    return () => {
+      eventSource.close();
+    };
+  },[]);
 
   async function askAI() {
 
@@ -151,7 +172,8 @@ export default function Home() {
             <div className="flex-1 overflow-hidden p-8">
 
               <ChatWindow
-                messages={messages}
+                messages={messages} 
+                thinkingText={thinkingText}
               />
 
             </div>

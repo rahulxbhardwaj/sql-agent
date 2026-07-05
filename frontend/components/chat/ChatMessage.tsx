@@ -1,7 +1,7 @@
 import { Message } from "../../src/types/chat";
 import ExecutionTimeline from "../ExecutionTimeline";
 import ResultTable from "../ResultTable";
-
+import TypingText from "@/components/typingtext";
 import { motion } from "framer-motion";
 import { useState } from "react";
 
@@ -18,10 +18,11 @@ import {
 
 interface ChatMessageProps {
   message: Message;
+  thinkingText: string;
 }
 
 export default function ChatMessage({
-  message,
+  message, thinkingText 
 }: ChatMessageProps) {
   const [copied, setCopied] = useState(false);
   const isUser = message.role === "user";
@@ -190,7 +191,7 @@ export default function ChatMessage({
 
             <p className="text-slate-600 font-medium">
 
-              Thinking...
+             <TypingText text={thinkingText} />
 
             </p>
 

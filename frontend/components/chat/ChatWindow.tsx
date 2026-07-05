@@ -5,10 +5,12 @@ import { Sparkles } from "lucide-react";
 
 interface ChatWindowProps {
   messages: Message[];
+  thinkingText: string;
+
 }
 
 export default function ChatWindow({
-  messages,
+  messages,   thinkingText
 }: ChatWindowProps) {
 
   const bottomRef = useRef<HTMLDivElement>(null);
@@ -86,6 +88,7 @@ export default function ChatWindow({
             <ChatMessage
               key={message.id}
               message={message}
+              thinkingText={thinkingText}
             />
 
           ))}

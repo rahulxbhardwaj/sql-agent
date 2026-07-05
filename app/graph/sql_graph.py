@@ -5,6 +5,8 @@ from langgraph.graph import StateGraph, START, END
 from app.agents.exploration_agent import ExplorationAgent
 from app.graph.state import SQLAgentState
 
+#Sending the Event to the Event API
+from app.utils.event_sender import send_event
 
 class SQLGraph:
 
@@ -95,21 +97,27 @@ class SQLGraph:
         }
 
     def sql_agent(self, state):
-
+        send_event("planner_started", status = "started" , message="🧠 Planning the best approach...")
         self.tracer.start_step("planner")
-
         agent = ExplorationAgent(
             self.llm,
             self.db,
             state["context"],
         )
-
+        print("Data in State:", state)
+        print("=====================================")
         result = agent.run(state)
         print("\n========== RAW LLM RESPONSE ==========")
         print(result)
         print("=====================================\n")
 
         self.tracer.finish_step("planner")
+
+        send_event(
+        "planner_finished",
+        status="completed",
+        message=result["thought_process"]
+        )
 
         return result
 
@@ -159,7 +167,7 @@ class SQLGraph:
         }
 
     def execute_final(self, state):
-
+        send_event("Executing Final Query", status = "started", message="⚡ Executing final SQL query...")
         self.tracer.start_step("execute_final")
 
         try:
