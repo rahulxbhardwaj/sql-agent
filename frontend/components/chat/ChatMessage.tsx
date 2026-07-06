@@ -1,7 +1,8 @@
 import { Message } from "../../src/types/chat";
 import ExecutionTimeline from "../ExecutionTimeline";
+import VisualizeButton from "../visualization/VisualizeButton";
 import ResultTable from "../ResultTable";
-import TypingText from "@/components/typingtext";
+import TypingTimeline from "@/components/TypingTimeline";
 import { motion } from "framer-motion";
 import { useState } from "react";
 
@@ -18,11 +19,11 @@ import {
 
 interface ChatMessageProps {
   message: Message;
-  thinkingText: string;
+  thinkingSteps: string[];
 }
 
 export default function ChatMessage({
-  message, thinkingText 
+  message, thinkingSteps 
 }: ChatMessageProps) {
   const [copied, setCopied] = useState(false);
   const isUser = message.role === "user";
@@ -191,7 +192,7 @@ export default function ChatMessage({
 
             <p className="text-slate-600 font-medium">
 
-             <TypingText text={thinkingText} />
+             <TypingTimeline steps={thinkingSteps} />
 
             </p>
 
@@ -360,6 +361,20 @@ export default function ChatMessage({
             <ResultTable
               data={message.answer}
             />
+            
+            {message.answer && message.sql && (
+
+                <VisualizeButton
+
+                question={message.content}
+
+                sql={message.sql}
+
+                answer={message.answer}
+
+                  />
+
+              )}
 
           </div>
 

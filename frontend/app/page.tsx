@@ -13,7 +13,7 @@ export default function Home() {
 
   const [query, setQuery] = useState("");
   const [messages, setMessages] = useState<Message[]>([]);
-  const [thinkingText, setThinkingText] = useState("Thinking...");
+  const [thinkingSteps, setThinkingSteps] = useState<string[]>([]);
 
 
   
@@ -24,7 +24,9 @@ export default function Home() {
     
     const data = JSON.parse(event.data);
     console.log("Received event:", data);
-    setThinkingText(data.message);
+    if (data.message) {
+      setThinkingSteps((prev) => [...prev, data.message]);
+    }
 
 
     };
@@ -35,7 +37,7 @@ export default function Home() {
   },[]);
 
   async function askAI() {
-
+    setThinkingSteps([]);
     if (!query.trim()) return;
 
     const userMessage: Message = {
@@ -173,13 +175,13 @@ export default function Home() {
 
               <ChatWindow
                 messages={messages} 
-                thinkingText={thinkingText}
+                thinkingSteps={thinkingSteps}
               />
 
             </div>
 
             <div className="px-8 pb-8">
-
+              
               <QueryInput
                 query={query}
                 setQuery={setQuery}

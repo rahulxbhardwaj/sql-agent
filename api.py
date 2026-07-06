@@ -16,6 +16,10 @@ from app.prompts.schema_formatter import SchemaFormatter
 from app.utils.sql_cleaner import clean_sql
 from app.tracing.execution_tracer import ExecutionTracer
 
+
+# ===========Visualization Agent===========
+from app.agents.visualization_agent import VisualizationGraph
+   
 # ===========================
 # FastAPI App
 # ===========================
@@ -42,6 +46,7 @@ llm = LLMClient()
 db = DatabaseManager()
 schema_reader = SchemaReader(db)
 prompt_builder = PromptBuilder()
+visualization_graph = VisualizationGraph(llm)
 
 sql_graph = SQLGraph(
     llm,
@@ -52,6 +57,8 @@ sql_graph = SQLGraph(
     SchemaFormatter,
     tracer,
 )
+
+
 
 # ===========================
 # Request Model
@@ -115,3 +122,21 @@ async def events():
     )
 
 
+class VisualizationRequest(BaseModel):
+    question: str
+    sql: str
+    result: list
+
+@app.post("/visualize")
+def visualize(request: VisualizationRequest):
+
+    visualization = visualization_graph.run(
+        question=request.question,
+        sql=request.sql,
+        result=request.result,
+    )
+
+    return {
+        "success": True,
+        "visualization": visualization,
+    }

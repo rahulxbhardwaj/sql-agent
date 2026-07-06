@@ -11,3 +11,22 @@ data/company.db
 .vscode/
 
 *.log
+
+# Python
+__pycache__/
+*.pyc
+
+# Database
+data/*.db
+
+# Node
+node_modules/
+.next/
+
+# Environment
+.env
+.env.*
+
+# OS
+.DS_Store
+Thumbs.db
