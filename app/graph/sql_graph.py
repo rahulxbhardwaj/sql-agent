@@ -19,6 +19,7 @@ class SQLGraph:
         clean_sql,
         SchemaFormatter,
         tracer,
+        redis_client
     ):
 
         self.llm = llm
@@ -28,6 +29,7 @@ class SQLGraph:
         self.clean_sql = clean_sql
         self.schema_formatter = SchemaFormatter()
         self.tracer = tracer
+        self.redis_client = redis_client
 
         builder = StateGraph(SQLAgentState)
 
@@ -104,12 +106,16 @@ class SQLGraph:
             self.db,
             state["context"],
         )
+
+        result = agent.run(state)
+        '''
         print("Data in State:", state)
         print("=====================================")
-        result = agent.run(state)
+        
         print("\n========== RAW LLM RESPONSE ==========")
         print(result)
         print("=====================================\n")
+        '''
 
         self.tracer.finish_step("planner")
 
@@ -129,8 +135,9 @@ class SQLGraph:
 
             sql = self.clean_sql(state["sql_query"])
 
+            '''
             print("Executing:", sql)
-
+            '''
             result = self.db.execute_query(sql)
 
             self.tracer.finish_step("execute_exploration")

@@ -14,11 +14,11 @@ class ExplorationAgent:
 
     def run(self, state: SQLAgentState):
 
-        print("\n========== Planner ==========\n")
+        #print("\n========== Planner ==========\n")
 
         planner_result = self._think(state)
 
-        print(planner_result)
+        #print(planner_result)
 
         return {
             "need_exploration": planner_result["need_exploration"],

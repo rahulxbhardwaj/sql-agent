@@ -19,7 +19,19 @@ from app.tracing.execution_tracer import ExecutionTracer
 
 # ===========Visualization Agent===========
 from app.agents.visualization_agent import VisualizationGraph
-   
+
+
+#==============Redis Client===================
+import redis
+import os
+
+from app.config import ( REDIS_URL )
+redis_client = redis.Redis.from_url(
+   REDIS_URL,
+    decode_responses=True
+)
+
+
 # ===========================
 # FastAPI App
 # ===========================
@@ -44,7 +56,7 @@ tracer = ExecutionTracer()
 
 llm = LLMClient()
 db = DatabaseManager()
-schema_reader = SchemaReader(db)
+schema_reader = SchemaReader(db,redis_client)
 prompt_builder = PromptBuilder()
 visualization_graph = VisualizationGraph(llm)
 
@@ -56,6 +68,7 @@ sql_graph = SQLGraph(
     clean_sql,
     SchemaFormatter,
     tracer,
+    redis_client
 )
 
 

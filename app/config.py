@@ -5,3 +5,5 @@ MODEL_NAME = "qwen2.5-coder-3b-instruct"
 DATABASE_PATH = "data/company.db"
 
 EVENT_PATH = "http://127.0.0.1:8000/event"
+
+REDIS_URL="redis://localhost:6379/0"
