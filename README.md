@@ -49,9 +49,10 @@ Implemented:
 ## Roadmap
 
 - [x] Backend SQL Agent
-- [ ] FastAPI backend
-- [ ] Next.js frontend
-- [ ] Chat interface
+- [x] FastAPI backend
+- [x] Next.js frontend
+- [x] Chat interface
+- [x] Redis Cache for Faster Execution
 - [ ] Multi-database support
 - [ ] Docker deployment
 
