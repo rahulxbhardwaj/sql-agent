@@ -190,11 +190,11 @@ export default function ChatMessage({
               className="h-3 w-3 rounded-full bg-violet-500"
             />
 
-            <p className="text-slate-600 font-medium">
+            <div className="text-slate-600 font-medium">
 
              <TypingTimeline steps={thinkingSteps} />
 
-            </p>
+            </div>
 
           </div>
 

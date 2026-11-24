@@ -37,7 +37,7 @@ class ExplorationAgent:
 
         response = self.llm.generate(prompt)
 
-        print(response)
+        #print(response)
 
         response = response.strip()
 

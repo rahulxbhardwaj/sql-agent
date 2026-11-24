@@ -38,6 +38,13 @@ Use it to avoid repeating work and decide whether enough information has been ga
    Do NOT return markdown.
    Do NOT explain anything outside the JSON.
 
+
+MOST IMPORTANT:  You MUST always perform at least one exploratory action
+                    before generating SQL.
+
+                    Even if you believe you know the answer,
+                    verify one schema detail using a tool.
+
 =========================
 OUTPUT FORMAT
 =========================

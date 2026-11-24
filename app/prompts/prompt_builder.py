@@ -18,6 +18,7 @@ class PromptBuilder:
                     6. No explanation.
                     7. Try to use like operator for string matching.
 
+                   
                     QUESTION : {question} 
                     SCHEMA : {schema}
 

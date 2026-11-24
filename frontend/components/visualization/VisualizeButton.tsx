@@ -1,9 +1,8 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { BarChart3, Loader2 } from "lucide-react";
-
-import VisualizationModal from "./VisualizationModal";
 
 interface Props {
   question?: string;
@@ -11,26 +10,14 @@ interface Props {
   answer?: any[];
 }
 
-interface VisualizationResponse {
-  chart: string;
-  title: string;
-  x: string;
-  y: string;
-  reason: string;
-  insight: string;
-}
-
 export default function VisualizeButton({
   question,
   sql,
   answer,
 }: Props) {
+  const router = useRouter();
+
   const [loading, setLoading] = useState(false);
-
-  const [open, setOpen] = useState(false);
-
-  const [visualization, setVisualization] =
-    useState<VisualizationResponse | null>(null);
 
   const visualize = async () => {
     if (!answer || answer.length === 0) return;
@@ -40,11 +27,9 @@ export default function VisualizeButton({
     try {
       const response = await fetch("http://127.0.0.1:8000/visualize", {
         method: "POST",
-
         headers: {
           "Content-Type": "application/json",
         },
-
         body: JSON.stringify({
           question,
           sql,
@@ -54,12 +39,18 @@ export default function VisualizeButton({
 
       const data = await response.json();
 
-      console.log(data);
-
       if (data.success) {
-        setVisualization(data.visualization);
+        sessionStorage.setItem(
+          "visualization-data",
+          JSON.stringify({
+            visualization: data.visualization,
+            data: answer,
+            question,
+            sql,
+          })
+        );
 
-        setOpen(true);
+        router.push("/analyse");
       }
     } catch (err) {
       console.error(err);
@@ -69,56 +60,38 @@ export default function VisualizeButton({
   };
 
   return (
-    <>
-      <button
-        onClick={visualize}
-        disabled={loading}
-        className="
-          mt-6
-          flex
-          items-center
-          gap-3
-          rounded-xl
-          border
-          border-violet-200
-          bg-gradient-to-r
-          from-violet-500
-          to-indigo-500
-          px-5
-          py-3
-          text-white
-          shadow-lg
-          transition
-          hover:scale-[1.03]
-          hover:shadow-xl
-          active:scale-95
-          disabled:opacity-70
-        "
-      >
-        {loading ? (
-          <>
-            <Loader2
-              size={18}
-              className="animate-spin"
-            />
-
-            Visualizing...
-          </>
-        ) : (
-          <>
-            <BarChart3 size={18} />
-
-            Visualize Data
-          </>
-        )}
-      </button>
-
-      <VisualizationModal
-        open={open}
-        onClose={() => setOpen(false)}
-        visualization={visualization}
-        data={answer || []}
-      />
-    </>
+    <button
+      onClick={visualize}
+      disabled={loading}
+      className="
+      mt-6
+      flex
+      items-center
+      gap-3
+      rounded-xl
+      bg-gradient-to-r
+      from-violet-600
+      to-indigo-600
+      px-5
+      py-3
+      text-white
+      shadow-lg
+      transition
+      hover:scale-[1.03]
+      active:scale-95
+    "
+    >
+      {loading ? (
+        <>
+          <Loader2 className="animate-spin" size={18} />
+          Visualizing...
+        </>
+      ) : (
+        <>
+          <BarChart3 size={18} />
+          Analyse Data
+        </>
+      )}
+    </button>
   );
 }
